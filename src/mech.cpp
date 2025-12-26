@@ -1,9 +1,5 @@
 #include "mech.hpp"
 
-int32_t fp_can_id = 30;
-CAN can(PB_12, PB_13, (int)1e6);
-FirstPenguin penguin(fp_can_id, can);
-
 void Mech::move(int mode, int16_t (&pwm)[4]){
     switch (mode){
         case 0:
@@ -32,7 +28,6 @@ void Mech::move(int mode, int16_t (&pwm)[4]){
             }
             break;
     }
-    penguin.send();
 }
 
 void Mech::yume_belt(int mode, int16_t &pwm){
