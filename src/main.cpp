@@ -10,7 +10,6 @@ CANMessage msg;
 Mech mech;
 FirstPenguin penguin(fp_send_id, can); // PA_3,PA_2,PA_10,PB_3
 
-BufferedSerial pc(USBTX, USBRX, 115200);
 // char buf[16] = {};
 DigitalIn button(BUTTON1, PullUp); // Userbutton
 
@@ -20,7 +19,6 @@ int main()
 {
     while (true)
     {
-        penguin.wheel_pwm[3] = 1000;
         mech.move(Status["FRONT"], penguin.wheel_pwm);
 
         // 値の送信
