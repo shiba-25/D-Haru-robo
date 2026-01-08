@@ -2,7 +2,7 @@
 
 bool FirstPenguin::send()
 {
-    return can.write(CANMessage{send_id, reinterpret_cast<const uint8_t *>(wheel_pwm), 8});
+    return can.write(CANMessage{send_id, reinterpret_cast<const uint8_t *>(pwm), 8});
 }
 
 void FirstPenguin::read(const CANMessage &msg)

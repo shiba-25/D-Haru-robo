@@ -62,7 +62,9 @@ void stick_in()
     if (std::stof(buf) > 0.1 || std::stof(buf) < -0.1)
     {
         int read_value = std::stof(buf);
-    }else{
+    }
+    else
+    {
         int read_value = 0;
     }
 
