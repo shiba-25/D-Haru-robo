@@ -31,6 +31,7 @@ int main()
         mech.nabe_link(controller["sq"], controller["cr"], fp.pwm[fp_send_id]);
 
         penguin.send(); // 値の送信
+        fp.send();
         CANMessage msg(mech_can_id, (const uint8_t *)pwm, 8);
         can.write(msg);
     }
