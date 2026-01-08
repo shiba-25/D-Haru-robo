@@ -12,7 +12,7 @@ class Mech{
         const int nabe_link_max = 5000;
         const int wheel_motor[4][4] ={{-1,-1,1,1},{1,1,-1,-1},{1,-1,-1,1},{-1,1,1,-1}};
     public:
-        void move(int, int16_t (&)[4]);
+        void move(bool, bool, bool, bool, int16_t (&)[4]);
         void yume_belt(int, int16_t &);
         void taityo_rack(int, int16_t &);
         void nabe_link(int, int16_t &);

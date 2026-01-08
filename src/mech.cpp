@@ -1,32 +1,58 @@
 #include "mech.hpp"
 
-void Mech::move(int mode, int16_t (&pwm)[4]){
-    switch (mode){
-        case 0:
-            for (int i = 0; i < 4; i++){
-                pwm[i] = wheel_max * wheel_motor[0][i];
-            }
-            break;
+void Mech::move(bool up, bool down, bool right, bool left, int16_t (&pwm)[4]){
+    int is_button_push = up + down + right + left;
+    switch (is_button_push){
         case 1:
-            for (int i = 0; i < 4; i++){
-                pwm[i] = wheel_max * wheel_motor[1][i];
+            if (up) {
+                for(int i = 0; i < 4; i++){
+                    pwm[i] = wheel_max * wheel_motor[0][i];
+                }
+            } else if (down) {
+                for (int i = 0; i < 4; i++){
+                    pwm[i] = wheel_max * wheel_motor[1][i];
+                }
+            } else if (right) {
+                for (int i = 0; i < 4; i++){
+                    pwm[i] = wheel_max * wheel_motor[2][i];
+                }
+            } else if (left) {
+                for (int i = 0; i < 4; i++){
+                    pwm[i] = wheel_max * wheel_motor[3][i];
+                }
+            } else {
+                for (int i = 0; i < 4; i++){
+                    pwm[i] = 0;
+                }
             }
             break;
         case 2:
-            for (int i = 0; i < 4; i++){
-                pwm[i] = wheel_max * wheel_motor[2][i];
-            }
-            break;
-        case 3:
-            for (int i = 0; i < 4; i++){
-                pwm[i] = wheel_max * wheel_motor[3][i];
+            if (up && left) {
+                for (int i = 0; i < 4; i++){
+                    pwm[i] = wheel_max * (wheel_motor[0][i] + wheel_motor[3][i]) / 2;
+                }
+            } else if (up && right) {
+                for (int i = 0; i < 4; i++){
+                    pwm[i] = wheel_max * (wheel_motor[0][i] + wheel_motor[2][i]) / 2;
+                }
+            } else if (down && right) {
+                for (int i = 0; i < 4; i++){
+                    pwm[i] = wheel_max * (wheel_motor[1][i] + wheel_motor[2][i]) / 2;
+                }
+            } else if (down && left) {
+                for (int i = 0; i < 4; i++){
+                    pwm[i] = wheel_max * (wheel_motor[1][i] + wheel_motor[3][i]) / 2;
+                }
+            } else {
+                for (int i = 0; i < 4; i++){
+                    pwm[i] = 0;
+                }
             }
             break;
         default:
             for (int i = 0; i < 4; i++){
                 pwm[i] = 0;
             }
-            break;
     }
 }
 
