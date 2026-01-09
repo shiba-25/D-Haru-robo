@@ -3,6 +3,7 @@
 
 #include "mbed.h"
 #include "FIRSTPENGUIN.hpp"
+#include "read_controller.hpp"
 
 class Mech
 {
@@ -16,11 +17,11 @@ private:
     const int wheel_motor[4][4] = {{-1, -1, 1, 1}, {1, 1, -1, -1}, {1, -1, -1, 1}, {-1, 1, 1, -1}};
 
 public:
-    void move(bool, bool, bool, bool, int16_t (&)[4]);
-    void yume_belt(bool, bool, int16_t &);
-    void taityo_arm(bool, bool, bool, bool, int16_t &, int16_t &);
-    void taityo_rack(bool, bool, int16_t &);
-    void nabe_link(bool, bool, int16_t &);
+    void move(int16_t (&)[4]);
+    void yume_belt(int16_t &);
+    void taityo_arm(int16_t &, int16_t &);
+    void taityo_rack(int16_t &);
+    void nabe_link(int16_t &);
 };
 
 #endif // MECH_HPP_
