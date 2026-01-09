@@ -2,7 +2,7 @@
 
 void Mech::move(int16_t (&pwm)[4])
 {
-    int is_button_push = controller["up"] + controller["down"] + controller["right"] + controller["left"];
+    int is_button_push = controller["up"] + controller["down"] + controller["right"] + controller["left"] + controller["OP"] + controller["SH"];
     switch (is_button_push)
     {
     case 1:
@@ -32,6 +32,20 @@ void Mech::move(int16_t (&pwm)[4])
             for (int i = 0; i < 4; i++)
             {
                 pwm[i] = wheel_max * wheel_motor[3][i];
+            }
+        }
+        else if (controller["SH"])
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                pwm[i] = wheel_max;
+            }
+        }
+        else if (controller["OP"])
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                pwm[i] = -wheel_max;
             }
         }
         else
