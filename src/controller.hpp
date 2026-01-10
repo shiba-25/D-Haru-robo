@@ -1,3 +1,6 @@
+#ifndef CONTROLER_HPP
+#define CONTROLER_HPP
+
 #include "mbed.h"
 #include <iostream>
 #include <map>
@@ -62,9 +65,7 @@ void stick_in()
     if (std::stof(buf) > 0.1 || std::stof(buf) < -0.1)
     {
         read_value = std::stof(buf);
-    }
-    else
-    {
+    }else{
         read_value = 0;
     }
 
@@ -136,3 +137,5 @@ void read_controller()
         }
     }
 }
+
+#endif // CONTROLER_HPP
