@@ -38,6 +38,7 @@ int main()
         mech.taityo_arm(is_arm, pwm[1], pwm[2]);
         mech.taityo_rack(is_rack, pwm[3]);
         mech.nabe_link(is_link, fp.pwm[penguin_number]);
+        mech.control_change(controller["PS"]);
         // for(int i = 0; i < 4; i++){
             // penguin.pwm[i] = -50;
         // }
