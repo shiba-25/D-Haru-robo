@@ -108,32 +108,22 @@ void Mech::move(bool move_button[6], int16_t (&pwm)[4])
 
 void Mech::yume_belt(bool belt_button[2], int16_t &pwm)
 {
-    if (belt_button[0]) pwm = yume_belt_max;
-    else if (belt_button[1]) pwm = -yume_belt_max;
-    else pwm = 0;
+    pwm = yume_belt_max * (belt_button[0] - belt_button[1]);
 }
 
 void Mech::taityo_arm(bool arm_button[4], int16_t &pwm1, int16_t &pwm2)
 {
-    if (arm_button[0]) pwm1 = taityo_single_arm_max;
-    else if (arm_button[1]) pwm1 = -taityo_single_arm_max;
-    else pwm1 = 0;
+    pwm1 = taityo_single_arm_max * (arm_button[0] - arm_button[1]);
 
-    if (arm_button[2]) pwm2 = taityo_double_arm_max;
-    else if (arm_button[3]) pwm2 = -taityo_double_arm_max;
-    else pwm2 = 0;
+    pwm2 = taityo_double_arm_max * (arm_button[2] - arm_button[3]);
 }
 
 void Mech::taityo_rack(bool rack_button[2], int16_t &pwm)
 {
-    if (rack_button[0]) pwm = taityo_rack_max;
-    else if (rack_button[1]) pwm = -taityo_rack_max;
-    else pwm = 0;
+    pwm = taityo_rack_max * (rack_button[0] - rack_button[1]);
 }
 
 void Mech::nabe_link(bool link_button[2], int16_t &pwm)
 {
-    if (link_button[0]) pwm = nabe_link_max;
-    else if (link_button[1]) pwm = -nabe_link_max;
-    else pwm = 0;
+    pwm = nabe_link_max * (link_button[0] - link_button[1]);
 }
