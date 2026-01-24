@@ -15,42 +15,42 @@ void Mech::move(bool move_button[6], int16_t (&pwm)[4])
         {
             for (int i = 0; i < 4; i++)
             {
-                pwm[i] = wheel_max * wheel_motor[0][i];
+                pwm[i] = wheel_max * wheel_motor[0][i] * is_control_change;
             }
         }
         else if (move_button[1])
         {
             for (int i = 0; i < 4; i++)
             {
-                pwm[i] = wheel_max * wheel_motor[1][i];
+                pwm[i] = wheel_max * wheel_motor[1][i] * is_control_change;
             }
         }
         else if (move_button[2])
         {
             for (int i = 0; i < 4; i++)
             {
-                pwm[i] = wheel_max * wheel_motor[2][i];
+                pwm[i] = wheel_max * wheel_motor[2][i] * is_control_change;
             }
         }
         else if (move_button[3])
         {
             for (int i = 0; i < 4; i++)
             {
-                pwm[i] = wheel_max * wheel_motor[3][i];
+                pwm[i] = wheel_max * wheel_motor[3][i] * is_control_change;
             }
         }
         else if (move_button[4])
         {
             for (int i = 0; i < 4; i++)
             {
-                pwm[i] = wheel_max;
+                pwm[i] = wheel_max * is_control_change;
             }
         }
         else if (move_button[5])
         {
             for (int i = 0; i < 4; i++)
             {
-                pwm[i] = -wheel_max;
+                pwm[i] = -wheel_max * is_control_change;
             }
         }
         else
@@ -66,28 +66,28 @@ void Mech::move(bool move_button[6], int16_t (&pwm)[4])
         {
             for (int i = 0; i < 4; i++)
             {
-                pwm[i] = wheel_max * (wheel_motor[0][i] + wheel_motor[3][i]) / 2;
+                pwm[i] = wheel_max * (wheel_motor[0][i] + wheel_motor[3][i]) / 2 * is_control_change;
             }
         }
         else if (move_button[0] && move_button[2])
         {
             for (int i = 0; i < 4; i++)
             {
-                pwm[i] = wheel_max * (wheel_motor[0][i] + wheel_motor[2][i]) / 2;
+                pwm[i] = wheel_max * (wheel_motor[0][i] + wheel_motor[2][i]) / 2 * is_control_change;
             }
         }
         else if (move_button[1] && move_button[2])
         {
             for (int i = 0; i < 4; i++)
             {
-                pwm[i] = wheel_max * (wheel_motor[1][i] + wheel_motor[2][i]) / 2;
+                pwm[i] = wheel_max * (wheel_motor[1][i] + wheel_motor[2][i]) / 2 * is_control_change;
             }
         }
         else if (move_button[1] && move_button[3])
         {
             for (int i = 0; i < 4; i++)
             {
-                pwm[i] = wheel_max * (wheel_motor[1][i] + wheel_motor[3][i]) / 2;
+                pwm[i] = wheel_max * (wheel_motor[1][i] + wheel_motor[3][i]) / 2 * is_control_change;
             }
         }
         else
@@ -126,4 +126,22 @@ void Mech::taityo_rack(bool rack_button[2], int16_t &pwm)
 void Mech::nabe_link(bool link_button[2], int16_t &pwm)
 {
     pwm = nabe_link_max * (link_button[0] - link_button[1]);
+}
+
+void Mech::control_change(bool change_button)
+{
+    switch (is_control_change) {
+        case 1:
+            while (change_button)
+            {
+                is_control_change = -1;
+            }
+            break;
+        case -1:
+            while (change_button)
+            {
+                is_control_change = 1;
+            }
+            break;
+    }
 }
