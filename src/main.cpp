@@ -33,17 +33,17 @@ int main()
         bool is_arm[4] = {controller["R1"], controller["L1"], controller["R2"], controller["L2"]};
         bool is_rack[2] = {controller["R3"], controller["L3"]};
         bool is_link[2] = {controller["sq"], controller["cr"]};
-        mech.move(is_move, penguin.pwm); //足回り
+        mech.move(is_move, penguin.pwm, mech.is_control_change); //足回り
         mech.yume_belt(is_belt, pwm[0]);
-        mech.taityo_arm(is_arm, pwm[1], pwm[2]);
+        mech.taityo_arm(is_arm, pwm[1], pwm[2], mech.is_control_change);
         mech.taityo_rack(is_rack, pwm[3]);
         mech.nabe_link(is_link, fp.pwm[penguin_number]);
-        mech.control_change(controller["PS"]);
         // for(int i = 0; i < 4; i++){
             // penguin.pwm[i] = -50;
         // }
         // penguin.pwm[0] = 30;
         // fp.pwm[0] = 3000;
+        // printf("lx: %f\nly: %f\nrx: %f\nry: %f\n", stick_value["lx"], stick_value["ly"], stick_value["rx"], stick_value["ry"]);
 
         penguin.send(); // 足回り値の送信
         fp.send(); //本丸値の送信
