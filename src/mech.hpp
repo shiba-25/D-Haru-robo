@@ -28,7 +28,7 @@ private:
     void yume_belt(bool [2], int16_t &);
     void taityo_arm(bool [4], int16_t &, int16_t &, int &);
     void taityo_rack(bool[2], int16_t &);
-    void nabe_link(bool [2], int16_t &);
+    void nabe_honmaru(bool [2], int16_t &);
     void control_change(bool);
 };
 

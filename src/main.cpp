@@ -37,7 +37,7 @@ int main()
         mech.yume_belt(is_belt, pwm[0]);
         mech.taityo_arm(is_arm, pwm[1], pwm[2], mech.is_control_change);
         mech.taityo_rack(is_rack, pwm[3]);
-        mech.nabe_link(is_link, fp.pwm[penguin_number]);
+        mech.nabe_honmaru(is_link, fp.pwm[penguin_number]);
         // for(int i = 0; i < 4; i++){
             // penguin.pwm[i] = -50;
         // }

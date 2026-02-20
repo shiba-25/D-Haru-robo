@@ -207,7 +207,7 @@ void Mech::taityo_rack(bool rack_button[2], int16_t &pwm)
     pwm = taityo_rack_max * (rack_button[0] - rack_button[1]);
 }
 
-void Mech::nabe_link(bool link_button[2], int16_t &pwm)
+void Mech::nabe_honmaru(bool link_button[2], int16_t &pwm)
 {
     pwm = nabe_link_max * (link_button[0] - link_button[1]);
 }
