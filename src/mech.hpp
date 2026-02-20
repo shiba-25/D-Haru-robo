@@ -22,7 +22,7 @@ private:
     
     public:
     int is_control_change = 1;
-    void move(bool [6], int16_t (&)[4], int);
+    void move(bool [6], int16_t (&)[4]);
     void slow_move(float [4], int16_t (&)[4], int);
     void test(int16_t (&)[4]);
     void yume_belt(bool [2], int16_t &);

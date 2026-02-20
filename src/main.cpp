@@ -33,7 +33,7 @@ int main()
         bool is_arm[4] = {controller["R1"], controller["L1"], controller["R2"], controller["L2"]};
         bool is_rack[2] = {controller["R3"], controller["L3"]};
         bool is_link[2] = {controller["sq"], controller["cr"]};
-        mech.move(is_move, penguin.pwm, mech.is_control_change); //足回り
+        mech.move(is_move, penguin.pwm); //足回り
         mech.yume_belt(is_belt, pwm[0]);
         mech.taityo_arm(is_arm, pwm[1], pwm[2], mech.is_control_change);
         mech.taityo_rack(is_rack, pwm[3]);
