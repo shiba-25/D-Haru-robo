@@ -23,16 +23,18 @@ public:
     } receive[4] = {};
 
     // コンストラクタ
-    FirstPenguin(uint32_t id, CAN &can) : send_id(id), can(can) {}
+    FirstPenguin(uint32_t id, CAN &can1, CAN &can2) : send_id(id), plus_can(can1), minus_can(can2)  {}
 
     // メンバーへのアクセスを可能にする関数
     const ReceiveData *getReceiveData() const { return receive; }
     int16_t *getPwmData() { return pwm; }
-    bool send();
+    bool plus_send();
+    bool minus_send();
     void read(const CANMessage &msg);
 
 private:
-    CAN &can;
+    CAN &plus_can;
+    CAN &minus_can;
 };
 
 #endif

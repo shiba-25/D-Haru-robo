@@ -1,7 +1,4 @@
 #include "mech.hpp"
-#include "chrono"
-#include "thread"
-using namespace std;
 
 void Mech::move(bool move_button[6], int16_t (&pwm)[4])
 {
@@ -108,7 +105,7 @@ void Mech::move(bool move_button[6], int16_t (&pwm)[4])
     }
 }
 
-void Mech::slow_move(float stick_position[4], int16_t (&pwm)[4], int is_controller_change)
+void Mech::slow_move(float stick_position[4], int16_t (&pwm)[4])
 {
     if (stick_position[0] != 0 || stick_position[1] != 0)
     {
@@ -137,28 +134,28 @@ void Mech::slow_move(float stick_position[4], int16_t (&pwm)[4], int is_controll
         {
             for (int i = 0; i < 4; i++)
             {
-                pwm[i] = slow_wheel_max * wheel_motor[2][i] * is_controller_change;
+                pwm[i] = slow_wheel_max * wheel_motor[2][i] * is_control_change;
             }
         }
         else if (stick_position[2] < -100)
         {
             for (int i = 0; i < 4; i++)
             {
-                pwm[i] = slow_wheel_max * wheel_motor[3][i] * is_controller_change;
+                pwm[i] = slow_wheel_max * wheel_motor[3][i] * is_control_change;
             }
         }
         else if (stick_position[3] > 100)
         {
             for (int i = 0; i < 4; i++)
             {
-                pwm[i] = slow_wheel_max * wheel_motor[0][i] * is_controller_change;
+                pwm[i] = slow_wheel_max * wheel_motor[0][i] * is_control_change;
             }
         }
         else if (stick_position[3] < -100)
         {
             for (int i = 0; i < 4; i++)
             {
-                pwm[i] = slow_wheel_max * wheel_motor[1][i] * is_controller_change;
+                pwm[i] = slow_wheel_max * wheel_motor[1][i] * is_control_change;
             }
         }
         else
@@ -183,20 +180,8 @@ void Mech::yume_belt(bool belt_button[2], int16_t &pwm)
     pwm = yume_belt_max * (belt_button[0] - belt_button[1]);
 }
 
-void Mech::taityo_arm(bool arm_button[4], int16_t &pwm1, int16_t &pwm2, int &is_controller_change)
+void Mech::taityo_arm(bool arm_button[4], int16_t &pwm1, int16_t &pwm2)
 {
-    if (arm_button[0] && arm_button[1] && arm_button[2] && arm_button[3])
-        {
-            if (is_controller_change == 1)
-            {
-                is_control_change = -1;
-            }
-            else if (is_controller_change == -1)
-            {
-                is_control_change = 1;
-            }
-            ThisThread::sleep_for(chrono::milliseconds(1000));
-        }
     pwm1 = taityo_single_arm_max * (arm_button[0] - arm_button[1]);
 
     pwm2 = taityo_double_arm_max * (arm_button[2] - arm_button[3]);

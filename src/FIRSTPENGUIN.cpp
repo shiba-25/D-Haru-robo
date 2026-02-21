@@ -1,8 +1,17 @@
 #include "FIRSTPENGUIN.hpp"
 
-bool FirstPenguin::send()
+bool FirstPenguin::plus_send()
 {
-    return can.write(CANMessage{send_id, reinterpret_cast<const uint8_t *>(pwm), 8});
+    return plus_can.write(CANMessage{send_id, reinterpret_cast<const uint8_t *>(pwm), 8});
+}
+
+bool FirstPenguin::minus_send()
+{
+    for(int i = 0; i < 4; i++)
+    {
+        pwm[i] *= -1;
+    }
+    return minus_can.write(CANMessage{send_id, reinterpret_cast<const uint8_t *>(pwm), 8});
 }
 
 void FirstPenguin::read(const CANMessage &msg)
