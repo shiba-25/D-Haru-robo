@@ -3,10 +3,23 @@
 void Mech::move(bool move_button[6], float stick_position[4], int16_t (&pwm)[4])
 {
     is_button_push = 0;
+    int wheel_dir[4] = {0};
     for (int i = 0; i < 6; i++)
     {
         is_button_push += move_button[i];
     }
+
+    for (int i = 0; i < 6; i++)
+    {
+        if (move_button[i])
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                wheel_dir[j] += wheel_motor[j][i];
+            }
+        }
+    }
+
     switch (is_button_push)
     {
     case 0:
@@ -78,91 +91,15 @@ void Mech::move(bool move_button[6], float stick_position[4], int16_t (&pwm)[4])
         }
         break;
     case 1:
-        if (move_button[0])
+        for (int i = 0; i < 4; i++)
         {
-            for (int i = 0; i < 4; i++)
-            {
-                pwm[i] = wheel_max * wheel_motor[0][i] * is_control_change;
-            }
-        }
-        else if (move_button[1])
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                pwm[i] = wheel_max * wheel_motor[1][i] * is_control_change;
-            }
-        }
-        else if (move_button[2])
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                pwm[i] = wheel_max * wheel_motor[2][i] * is_control_change;
-            }
-        }
-        else if (move_button[3])
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                pwm[i] = wheel_max * wheel_motor[3][i] * is_control_change;
-            }
-        }
-        else if (move_button[4])
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                pwm[i] = wheel_max * is_control_change;
-            }
-        }
-        else if (move_button[5])
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                pwm[i] = -wheel_max * is_control_change;
-            }
-        }
-        else
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                pwm[i] = 0;
-            }
+            pwm[i] = wheel_max  * is_control_change * wheel_dir[i];
         }
         break;
     case 2:
-        if (move_button[0] && move_button[3])
+        for (int i = 0; i < 4; i++)
         {
-            for (int i = 0; i < 4; i++)
-            {
-                pwm[i] = wheel_max * (wheel_motor[0][i] + wheel_motor[3][i]) / 2 * is_control_change;
-            }
-        }
-        else if (move_button[0] && move_button[2])
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                pwm[i] = wheel_max * (wheel_motor[0][i] + wheel_motor[2][i]) / 2 * is_control_change;
-            }
-        }
-        else if (move_button[1] && move_button[2])
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                pwm[i] = wheel_max * (wheel_motor[1][i] + wheel_motor[2][i]) / 2 * is_control_change;
-            }
-        }
-        else if (move_button[1] && move_button[3])
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                pwm[i] = wheel_max * (wheel_motor[1][i] + wheel_motor[3][i]) / 2 * is_control_change;
-            }
-        }
-        else
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                pwm[i] = 0;
-            }
+            pwm[i] = wheel_max * is_control_change * (wheel_dir[i] / 2);
         }
         break;
     default:

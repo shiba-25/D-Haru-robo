@@ -15,7 +15,7 @@ private:
     const int taityo_double_arm_max = 5500;
     const int taityo_rack_max = 15000;
     const int nabe_link_max = 5000;
-    const int wheel_motor[4][4] = {{-1, -1, 1, 1}, {1, 1, -1, -1}, {1, -1, -1, 1}, {-1, 1, 1, -1}};
+    const int wheel_motor[6][4] = {{-1, -1, 1, 1}, {1, 1, -1, -1}, {1, -1, -1, 1}, {-1, 1, 1, -1}, {1, 1, 1, 1}, {-1, -1, -1, -1}};
     int r_dir = 0;
     int is_button_push = 0;
     
