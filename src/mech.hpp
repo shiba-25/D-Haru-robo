@@ -24,7 +24,6 @@ private:
     int is_control_change;
     Mech(int change) : is_control_change(change) {}
     void move(bool [6], float[4], int16_t (&)[4]);
-    void slow_move(float [4], int16_t (&)[4]);
     void test(int16_t (&)[4]);
     void yume_belt(bool [2], int16_t &);
     void taityo_arm(bool [4], int16_t &, int16_t &);
