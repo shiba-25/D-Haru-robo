@@ -1,6 +1,6 @@
 #include "mech.hpp"
 
-void Mech::move(bool move_button[6], int16_t (&pwm)[4])
+void Mech::move(bool move_button[6], float stick_position[4], int16_t (&pwm)[4])
 {
     is_button_push = 0;
     for (int i = 0; i < 6; i++)
@@ -9,6 +9,74 @@ void Mech::move(bool move_button[6], int16_t (&pwm)[4])
     }
     switch (is_button_push)
     {
+    case 0:
+        if (stick_position[0] != 0 || stick_position[1] != 0)
+        {
+            r_dir = atan2((-1 * stick_position[1]), stick_position[0]);
+            // float power = hypot(stick_position[0], stick_position[1]);
+            for (int i = 0; i < 4; i++)
+            {
+                int mekanamu = -1 * (int)(sin((M_PI / 180 * (90 * i + 45)) + r_dir) * slow_wheel_max);
+                if (mekanamu > 0)
+                {
+                    pwm[i] = min(mekanamu, wheel_max);
+                }
+                else if (mekanamu < 0)
+                {
+                    pwm[i] = max(mekanamu, -wheel_max);
+                }
+                else
+                {
+                    pwm[i] = 0;
+                }
+            }
+        }
+        else if (stick_position[2] != 0 || stick_position[3] != 0)
+        {
+            if (stick_position[2] > 100)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    pwm[i] = slow_wheel_max * wheel_motor[2][i] * is_control_change;
+                }
+            }
+            else if (stick_position[2] < -100)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    pwm[i] = slow_wheel_max * wheel_motor[3][i] * is_control_change;
+                }
+            }
+            else if (stick_position[3] > 100)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    pwm[i] = slow_wheel_max * wheel_motor[0][i] * is_control_change;
+                }
+            }
+            else if (stick_position[3] < -100)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    pwm[i] = slow_wheel_max * wheel_motor[1][i] * is_control_change;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    pwm[i] = 0;
+                }
+            }
+        }
+        else
+        {
+            for(int i = 0;i < 4; i++)
+            {
+                pwm[i] = 0;
+            }
+        }
+        break;
     case 1:
         if (move_button[0])
         {
