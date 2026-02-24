@@ -9,14 +9,45 @@ void Mech::move(bool move_button[6], float stick_position[4], int16_t (&pwm)[4])
         is_button_push += move_button[i];
     }
 
+    for (int i = 2; i < 4; i++)
+    {
+        for (int j = 0; j < 3; j += 2){
+            if (stick_position[i] > 100)
+            {
+                for (int k = 0; k < 4; k++)
+                {
+                    wheel_dir[k] = wheel_motor[j][k];
+                }
+            }
+            else if (stick_position[i] < -100)
+            {
+                for (int k = 0; k < 4; k++)
+                {
+                    wheel_dir[k] = wheel_motor[j + 1][k];
+                }
+            }
+            else
+            {
+                for (int k = 0; k < 4; k++)
+                {
+                    wheel_dir[k] = 0;
+                }
+            }
+        }
+    }
+
     for (int i = 0; i < 6; i++)
     {
         if (move_button[i])
         {
             for (int j = 0; j < 4; j++)
             {
-                wheel_dir[j] += wheel_motor[j][i];
+                wheel_dir[j] += wheel_motor[i][j];
             }
+        }
+        else
+        {
+            continue;
         }
     }
 
@@ -25,7 +56,7 @@ void Mech::move(bool move_button[6], float stick_position[4], int16_t (&pwm)[4])
     case 0:
         if (stick_position[0] != 0 || stick_position[1] != 0)
         {
-            r_dir = atan2((-1 * stick_position[1]), stick_position[0]);
+            r_dir = atan2((-1 * stick_position[0]), stick_position[1]);
             // float power = hypot(stick_position[0], stick_position[1]);
             for (int i = 0; i < 4; i++)
             {
@@ -46,40 +77,9 @@ void Mech::move(bool move_button[6], float stick_position[4], int16_t (&pwm)[4])
         }
         else if (stick_position[2] != 0 || stick_position[3] != 0)
         {
-            if (stick_position[2] > 100)
+            for (int i = 0; i < 4; i++)
             {
-                for (int i = 0; i < 4; i++)
-                {
-                    pwm[i] = slow_wheel_max * wheel_motor[2][i] * is_control_change;
-                }
-            }
-            else if (stick_position[2] < -100)
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    pwm[i] = slow_wheel_max * wheel_motor[3][i] * is_control_change;
-                }
-            }
-            else if (stick_position[3] > 100)
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    pwm[i] = slow_wheel_max * wheel_motor[0][i] * is_control_change;
-                }
-            }
-            else if (stick_position[3] < -100)
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    pwm[i] = slow_wheel_max * wheel_motor[1][i] * is_control_change;
-                }
-            }
-            else
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    pwm[i] = 0;
-                }
+                pwm[i] = slow_wheel_max * is_control_change * wheel_dir[i];
             }
         }
         else

@@ -18,6 +18,7 @@ private:
     const int wheel_motor[6][4] = {{-1, -1, 1, 1}, {1, 1, -1, -1}, {1, -1, -1, 1}, {-1, 1, 1, -1}, {1, 1, 1, 1}, {-1, -1, -1, -1}};
     int r_dir = 0;
     int is_button_push = 0;
+    int dead_space[2] = {100, -100};
     
     
     public:
