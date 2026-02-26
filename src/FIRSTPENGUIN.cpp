@@ -21,3 +21,19 @@ void FirstPenguin::read(const CANMessage &msg)
         receive[msg.id - send_id - 1].set(msg.data);
     }
 }
+
+void FirstPenguin::encoder_read(int16_t (&encoder_value)[4])
+{
+    for (int i = 0; i < 4; i++)
+    {
+        encoder_value[i] = receive[i].enc;
+    }
+}
+
+void FirstPenguin::pwm_read(int16_t (&pwm_value)[4])
+{
+    for (int i = 0; i < 4; i++)
+    {
+        pwm_value[i] = pwm[i];
+    }
+}

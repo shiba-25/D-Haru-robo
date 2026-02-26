@@ -9,32 +9,32 @@ void Mech::move(bool move_button[6], float stick_position[4], int16_t (&pwm)[4])
         is_button_push += move_button[i];
     }
 
-    for (int i = 2; i < 4; i++)
-    {
-        for (int j = 0; j < 3; j += 2){
-            if (stick_position[i] > 100)
-            {
-                for (int k = 0; k < 4; k++)
-                {
-                    wheel_dir[k] = wheel_motor[j][k];
-                }
-            }
-            else if (stick_position[i] < -100)
-            {
-                for (int k = 0; k < 4; k++)
-                {
-                    wheel_dir[k] = wheel_motor[j + 1][k];
-                }
-            }
-            else
-            {
-                for (int k = 0; k < 4; k++)
-                {
-                    wheel_dir[k] = 0;
-                }
-            }
-        }
-    }
+    // for (int i = 2; i < 4; i++)
+    // {
+    //     for (int j = 0; j < 3; j += 2){
+    //         if (stick_position[i] > 100)
+    //         {
+    //             for (int k = 0; k < 4; k++)
+    //             {
+    //                 wheel_dir[k] = wheel_motor[j][k];
+    //             }
+    //         }
+    //         else if (stick_position[i] < -100)
+    //         {
+    //             for (int k = 0; k < 4; k++)
+    //             {
+    //                 wheel_dir[k] = wheel_motor[j + 1][k];
+    //             }
+    //         }
+    //         else
+    //         {
+    //             for (int k = 0; k < 4; k++)
+    //             {
+    //                 wheel_dir[k] = 0;
+    //             }
+    //         }
+    //     }
+    // }
 
     for (int i = 0; i < 6; i++)
     {
@@ -60,7 +60,7 @@ void Mech::move(bool move_button[6], float stick_position[4], int16_t (&pwm)[4])
             // float power = hypot(stick_position[0], stick_position[1]);
             for (int i = 0; i < 4; i++)
             {
-                int mekanamu = -1 * (int)(sin((M_PI / 180 * (90 * i + 45)) + r_dir) * slow_wheel_max);
+                int mekanamu = (int)(sin((M_PI / 180 * (90 * i + 45)) + r_dir) * slow_wheel_max);
                 if (mekanamu > 0)
                 {
                     pwm[i] = min(mekanamu, wheel_max);
@@ -132,3 +132,43 @@ void Mech::nabe_honmaru(bool link_button[2], int16_t &pwm)
 {
     pwm = nabe_link_max * (link_button[0] - link_button[1]);
 }
+
+void Mech::v_goal(bool sengen)
+{
+    DigitalOut NeoPixel(PA_0);
+    NeoPixel = sengen;
+}
+// void Mech::pid_calc(int16_t (&pwm_control), int16_t encoder_value, int16_t want_value)
+// {
+//     float error;
+//     error = want_value - (encoder_value * decomposition);
+//     p_control = error;
+//     i_control += error * dt;
+//     d_control = (error - before_error) / dt;
+
+//     pwm_control = p_gain * p_control + i_gain * i_control + d_gain * d_control;
+//     if (pwm_control > 10000)
+//     {
+//         pwm_control = 10000;
+//     }
+//     else if (pwm_control < -10000)
+//     {
+//         pwm_control = -10000;
+//     }
+//     before_encoder = encoder_value;
+//     before_error = error;
+// }
+
+// void Mech::pid_start()
+// {
+//     for (int i = 0; i < 4; i++)
+//     {
+//         pid_calc(pwm[i], encoder[i], revolutions);
+//     }
+// }
+
+// void Mech::pid_starter()
+// {
+//     Ticker pid_starter;
+//     pid_starter.attach(&Mech::pid_start, 0.02f);
+// }

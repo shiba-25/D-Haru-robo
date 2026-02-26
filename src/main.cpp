@@ -3,6 +3,9 @@
 #include <map>
 #include "controller.hpp"
 
+// constexpr float p_gain = 0;
+// constexpr float i_gain = 0;
+// constexpr float d_gain = 0;
 constexpr int penguin_number = 0; //5個目のFPid指定
 constexpr uint32_t fp_id_1 = 30; // fpのid指定
 constexpr uint32_t fp_id_2 = 35; //5個目のFPid指定
@@ -14,6 +17,7 @@ CANMessage msg2;
 Mech mech(1);
 FirstPenguin penguin(fp_id_1, plus_can, minus_can); // PA_3,PA_2,PA_10,PB_3
 FirstPenguin fp(fp_id_2, plus_can, minus_can);
+// Pid pid({p_gain, i_gain, d_gain});
 int16_t pwm[4] = {};
 
 // char buf[16] = {};
@@ -24,8 +28,11 @@ int16_t pwm[4] = {};
 
 int main()
 {
+    // pid.reset();
     while (true)
     {
+        // penguin.encoder_read(mech.encoder);
+        // penguin.pwm_read(mech.pwm);
         read_controller();
         // int a[6] = {1,0,0,0,0,0};
         bool is_move[6] = {controller["u"],controller["d"],controller["r"],controller["l"],controller["SH"],controller["OP"]};
@@ -33,13 +40,15 @@ int main()
         bool is_arm[4] = {controller["R1"], controller["L1"], controller["R2"], controller["L2"]};
         bool is_rack[2] = {controller["R3"], controller["L3"]};
         bool is_link[2] = {controller["sq"], controller["cr"]};
-        float stick_position[4] = {stick_value["ly"], stick_value["lx"], stick_value["ry"], stick_value["rx"]};
+        bool is_vgoal = controller["PS"];
+        float stick_position[4] = {stick_value["lx"], stick_value["ly"], stick_value["ry"], stick_value["rx"]};
         mech.move(is_move, stick_position, penguin.pwm); //足回り
-        // mech.slow_move(is_stick, penguin.pwm);
+        // mech.slow_move(stick_position, penguin.pwm);
         mech.yume_belt(is_belt, pwm[0]);
         mech.taityo_arm(is_arm, pwm[1], pwm[2]);
         mech.taityo_rack(is_rack, pwm[3]);
         mech.nabe_honmaru(is_link, fp.pwm[penguin_number]);
+        mech.v_goal(is_vgoal);
         // for(int i = 0; i < 4; i++){
             // penguin.pwm[i] = -50;
         // }

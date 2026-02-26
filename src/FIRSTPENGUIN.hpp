@@ -31,6 +31,8 @@ public:
     bool plus_send();
     bool minus_send();
     void read(const CANMessage &msg);
+    void encoder_read(int16_t (&)[4]);
+    void pwm_read(int16_t (&)[4]);
 
 private:
     CAN &plus_can;
