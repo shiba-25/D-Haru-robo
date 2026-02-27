@@ -32,10 +32,10 @@ void Mech::move(bool move_button[6], float stick_position[4], int16_t (&pwm)[4])
     switch (is_button_push)
     {
     case 0:
-        pwm[0] = (- stick_position[0] + stick_position[1] - stick_position[3]);
-        pwm[1] = (+ stick_position[0] + stick_position[1] - stick_position[3]);
-        pwm[2] = (- stick_position[0] - stick_position[1] - stick_position[3]);
-        pwm[3] = (+ stick_position[0] - stick_position[1] - stick_position[3]);
+        pwm[0] = static_cast<int>(slow_wheel_max * (- stick_position[0] + stick_position[1] - stick_position[3]));
+        pwm[1] = static_cast<int>(slow_wheel_max * (+ stick_position[0] + stick_position[1] - stick_position[3]));
+        pwm[2] = static_cast<int>(slow_wheel_max * (- stick_position[0] - stick_position[1] - stick_position[3]));
+        pwm[3] = static_cast<int>(slow_wheel_max * (+ stick_position[0] - stick_position[1] - stick_position[3]));
         break;
     case 1:
         for (int i = 0; i < 4; i++)
