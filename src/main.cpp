@@ -36,10 +36,9 @@ int main()
         read_controller();
         // int a[6] = {1,0,0,0,0,0};
         bool is_move[6] = {controller["u"],controller["d"],controller["r"],controller["l"],controller["SH"],controller["OP"]};
-        bool is_belt[2] = {controller["tri"],controller["ci"]};
+        bool is_belt[4] = {controller["tri"],controller["ci"], controller["sq"], controller["cr"]};
         bool is_arm[4] = {controller["R1"], controller["L1"], controller["R2"], controller["L2"]};
         bool is_rack[2] = {controller["R3"], controller["L3"]};
-        bool is_link[2] = {controller["sq"], controller["cr"]};
         bool is_vgoal = controller["PS"];
         float stick_position[4] = {stick_value["lx"], stick_value["ly"], stick_value["ry"], stick_value["rx"]};
         mech.move(is_move, stick_position, penguin.pwm); //足回り
@@ -47,7 +46,6 @@ int main()
         mech.yume_belt(is_belt, pwm[0]);
         mech.taityo_arm(is_arm, pwm[1], pwm[2]);
         mech.taityo_rack(is_rack, pwm[3]);
-        mech.nabe_honmaru(is_link, fp.pwm[penguin_number]);
         mech.v_goal(is_vgoal);
         // for(int i = 0; i < 4; i++){
             // penguin.pwm[i] = -50;

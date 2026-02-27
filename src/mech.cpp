@@ -63,9 +63,9 @@ void Mech::move(bool move_button[6], float stick_position[4], int16_t (&pwm)[4])
 }
 
 
-void Mech::yume_belt(bool belt_button[2], int16_t &pwm)
+void Mech::yume_belt(bool belt_button[4], int16_t &pwm)
 {
-    pwm = yume_belt_max * (belt_button[0] - belt_button[1]);
+    pwm = max((yume_belt_max * (belt_button[0] - belt_button[1])), (slow_yume_belt_max * (belt_button[2] - belt_button[3])));
 }
 
 void Mech::taityo_arm(bool arm_button[4], int16_t &pwm1, int16_t &pwm2)
@@ -78,11 +78,6 @@ void Mech::taityo_arm(bool arm_button[4], int16_t &pwm1, int16_t &pwm2)
 void Mech::taityo_rack(bool rack_button[2], int16_t &pwm)
 {
     pwm = taityo_rack_max * (rack_button[0] - rack_button[1]);
-}
-
-void Mech::nabe_honmaru(bool link_button[2], int16_t &pwm)
-{
-    pwm = nabe_link_max * (link_button[0] - link_button[1]);
 }
 
 void Mech::v_goal(bool sengen)
