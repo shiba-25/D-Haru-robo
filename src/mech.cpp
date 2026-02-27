@@ -55,6 +55,11 @@ void Mech::move(bool move_button[6], float stick_position[4], int16_t (&pwm)[4])
             pwm[i] = 0;
         }
     }
+
+    for (int i = 0; i < 4; i++)
+    {
+        pwm[i] = min(max(static_cast<int>(pwm[i]), -wheel_max), wheel_max);
+    }
 }
 
 
