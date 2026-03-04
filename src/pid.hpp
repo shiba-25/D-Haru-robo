@@ -1,59 +1,34 @@
-#ifndef PID_NEW_HPP
-#define PID_NEW_HPP
+// #ifndef PID_HPP
+// #define PID_HPP
 
-#include <algorithm>
-#include "mbed.h"
+// #include <iostream>
+// #include "mbed.h"
 
-namespace pid {
+// struct Pid_Gain
+// {
+//     float p_gain = 0.0;
+//     float i_gain = 0.0;
+//     float d_gain = 0.0;
+// };
 
-struct PidGain {
-  float kp;
-  float ki;
-  float kd;
-};
+// class Pid
+// {
+// public:
+//     Pid(const Pid_Gain pid_gain) : _pid_gain(pid_gain), _pre_error(0), _integral(0) {}
+//     void pid_calc(float goal, float encoder)
+//     {
+//         float error = (goal - encoder) * 1000 / 20;
+//         float p_control;
+//         float i_control;
+//         float d_control;
 
-struct PidParameter {
-  PidGain gain;
-  float min;
-  float max;
-};
+//         float output = _pid_gain.p_gain * p_control + _pid_gain.i_gain * i_control + _pid_gain.d_gain * d_control;
+//         _pre_error = error;
+//     };
+// private:
+//     Pid_Gain _pid_gain;
+//     int _pre_error = 0;
+//     int _integral = 0;
+// };
 
-class Pid {
- public:
-  Pid(const PidParameter parameter)
-      : _parameter(parameter), _pre_error(0), _integral(0) {}
-
-  Pid() : _parameter{PidGain{0, 0, 0}, 0, 0}, _pre_error(0), _integral(0) {}
-
-  float calc(const float goal, const float actual, const float dt_sec) {
-    float error = goal - actual;
-    _integral += error * dt_sec;
-    float deriv = dt_sec == 0 ? 0 : (error - _pre_error) / dt_sec;
-    float output = _parameter.gain.kp * error + _parameter.gain.ki * _integral +
-                   _parameter.gain.kd * deriv;
-
-    output = min(max(output, _parameter.min), _parameter.max);
-    _pre_error = error;
-    return output;
-  }
-
-  void reset() {
-    _integral = 0;
-    _pre_error = 0;
-  }
-
-  void set_gain(const PidGain gain) { _parameter.gain = gain; }
-
-  void set_limit(const float max, const float min) {
-    _parameter.max = max;
-    _parameter.min = min;
-  }
-
- private:
-  PidParameter _parameter;
-  float _pre_error;
-  float _integral;
-};
-}  // namespace pid
-
-#endif
+// #endif
