@@ -28,7 +28,7 @@ void Mech::move(bool move_button[4], float stick_position[3], int16_t (&pwm)[4])
     switch (is_button_push)
     {
     case 0:
-        if (stick_position[2] != 0)
+        if (fabs(stick_position[2]) > 0.50)
         {
             for (int i = 0; i < 4; i++)
             {
@@ -85,9 +85,9 @@ void Mech::yume_belt(bool belt_button[4], int16_t &pwm)
 
 void Mech::taityo_arm(bool arm_button[4], int16_t &pwm1, int16_t &pwm2)
 {
-    pwm1 = taityo_single_arm_max * arm_button[0] - arm_button[1];
+    pwm1 = taityo_single_arm_max * (arm_button[0] - arm_button[1]);
 
-    pwm2 = taityo_double_arm_max * arm_button[2] - arm_button[3];
+    pwm2 = taityo_double_arm_max * (arm_button[2] - arm_button[3]);
 }
 
 void Mech::taityo_rack(bool rack_button[2], int16_t &pwm)

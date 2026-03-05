@@ -1,7 +1,9 @@
 #include "mech.hpp"
 #include "mbed.h"
+#include <iostream>
 #include <map>
 #include "controller.hpp"
+// #include "pid.hpp"
 // #include "sensor.hpp"
 // #include "pid/pid.hpp"
 // #define limit_1 PB_8
@@ -13,6 +15,7 @@ constexpr uint32_t fp_id_1 = 30; // fpのid指定
 constexpr uint32_t fp_id_2 = 35; //5個目のFPid指定
 constexpr int mech_can_id = 2;      // 丼モタのid指定
 bool fast_check = 1;
+int dt = 100;
 // int o = 1;
 int16_t encoder_initial[4] = {0};
 int16_t encoder_value[4] = {0, 0, 0, 0};
@@ -22,7 +25,14 @@ CANMessage msg;
 Mech mech(1);
 FirstPenguin penguin(fp_id_1, plus_can, minus_can); // PA_3,PA_2,PA_10,PB_3
 FirstPenguin fp(fp_id_2, plus_can, minus_can);
-// Pid pid({p_gain, i_gain, d_gain});
+
+// struct PidGain
+// {
+//     float kp = 1.0;
+//     float ki = 0.0;
+//     float kd = 0.0;
+// };
+// Pid pid;
 int16_t pwm[4] = {};
 bool is_limit[5] = {1,1,1,1,1};
 
@@ -42,7 +52,10 @@ bool hobo_ticker(int ms, int timer_num)
         timer[timer_num].reset();
         return true;
     }
-    return false;
+    else
+    {
+        return false;
+    }
 }
 
 void read_encoder(int16_t (&encoder)[4])
@@ -65,16 +78,25 @@ void read_encoder(int16_t (&encoder)[4])
     }
 }
 
-void read_limit(bool (&is_sw_push)[5])
-{
-    if(plus_can.read(msg); msg.id == 11){
-        uint8_t sw = msg.data[5]; //スイッチの値の内容
-        for(int i = 0; i < 5; i++){
-            //シフトで判別する位を最下位ビットへ移動し、1と論理積を行うことで各位の値を判別する。
-                is_sw_push[i] = (sw >> i) & 0x01;
-        }
-    }
-}
+// void encoder_reset(int16_t (&encoder)[4])
+// {
+    // ThisThread::sleep_for(1s);
+    // encoder[0] = 0;
+    // encoder[1] = 0;
+    // encoder[2] = 0;
+    // encoder[3] = 0;
+// }
+
+// void read_limit(bool (&is_sw_push)[5])
+// {
+//     if(plus_can.read(msg); msg.id == 11){
+//         uint8_t sw = msg.data[5]; //スイッチの値の内容
+//         for(int i = 0; i < 5; i++){
+//             //シフトで判別する位を最下位ビットへ移動し、1と論理積を行うことで各位の値を判別する。
+//                 is_sw_push[i] = (sw >> i) & 0x01;
+//         }
+//     }
+// }
 
 // map<string, int> Status = {{"BELT", 0}, {"SINGLE_ARM", 1}, {"DOUBLE_ARM", 2}, {"RACK", 3}}; // すてーたすの作成
 
@@ -91,14 +113,15 @@ int main()
     DigitalOut NeoPixel(PA_0);
     while (true)
     {
+
         // penguin.encoder_read(mech.encoder);
         // penguin.pwm_read(mech.pwm);
         read_controller();
         read_encoder(encoder_value);
-        read_limit(is_limit);
+        // read_limit(is_limit);
         // fast_check = 0;
         // int a[6] = {1,0,0,0,0,0};
-        bool is_move[6] = {controller["u"],controller["d"],controller["r"],controller["l"]};
+        bool is_move[4] = {controller["u"],controller["d"],controller["r"],controller["l"]};
         bool is_belt[4] = {controller["ci"],controller["cr"], controller["tri"], controller["sq"]};
         bool is_arm[4] = {controller["L1"], controller["R1"], controller["L2"], controller["R2"]};
         bool is_rack[2] = {controller["R3"], controller["L3"]};
@@ -113,24 +136,31 @@ int main()
         // mech.v_goal(is_vgoal);
         // for(int i = 0; i < 4; i++){
             // penguin.pwm[i] = -50;
-        // }
-        // penguin.pwm[0] = 30;
-        // fp.pwm[0] = 3
-
-        if(controller["PS"] == 1)
-        {
-            NeoPixel = 1;
-            fast_check = 0;
-        }
-        else
-        {
-            NeoPixel = 0;
-        }
-        static int dbg_cnt = 0;
-        if (++dbg_cnt % 50 == 0)
-        {
-            // printf("enc: %d, %d, %d, %d enc_init: %d, %d, %d, %d\n", encoder_value[0], encoder_value[1], encoder_value[2], encoder_value[3], encoder_initial[0], encoder_initial[1], encoder_initial[2], encoder_initial[3]);
+            // }
+            // penguin.pwm[0] = 30;
+            // fp.pwm[0] = 3
+            if (hobo_ticker(dt, 0))
+            {
+                // encoder_reset(encoder_value);
+            }
+            
+            if(button == 0)
+            {
+                NeoPixel = 1;
+                fast_check = 0;
+            }
+            else
+            {
+                NeoPixel = 0;
+            }
+            static int dbg_cnt = 0;
+            if (++dbg_cnt % 50 == 0)
+            {
+                // printf("pwm: %d", penguin.pwm[0]);
+                // printf("enc: %d, %d, %d, %d enc_init: %d, %d, %d, %d\n", encoder_value[0], encoder_value[1], encoder_value[2], encoder_value[3], encoder_initial[0], encoder_initial[1], encoder_initial[2], encoder_initial[3]);
+                printf("pwm: %d, %d, %d, %d\n", pwm[0], pwm[1], pwm[2], pwm[3]);
             // printf("limit: %d\n", limit);
+            // printf("stick: %f, %f, %f", stick_value["lx"], stick_value["ly"], stick_value["rx"]);
         }
         // if(plus_can.read(msg); msg.id == 12){ //ID10のCANメッセージを抽出
         
@@ -161,6 +191,15 @@ int main()
         // else if (is_sw_push[4])
         // {
         //     penguin.pwm[1] = 100;
+        // }
+
+        // if (penguin.pwm[0] > 8000)
+        // {
+        //     penguin.pwm[0] = 8000;
+        // }
+        // else if (penguin.pwm[0] < -8000)
+        // {
+        //     penguin.pwm[0] = -8000;
         // }
 
         penguin.plus_send(); // 足回り値の送信
