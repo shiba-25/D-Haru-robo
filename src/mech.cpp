@@ -1,6 +1,6 @@
 #include "mech.hpp"
 
-void Mech::move(bool move_button[4], float stick_position[3], int16_t (&pwm)[4])
+void Mech::move(bool move_button[4], float stick_position[3], int16_t (&pwm)[4], int16_t encoder[4])
 {
     is_button_push = 0;
     int wheel_dir[4] = {0};
@@ -10,7 +10,7 @@ void Mech::move(bool move_button[4], float stick_position[3], int16_t (&pwm)[4])
     }
 
 
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 4; i++)
     {
         if (move_button[i])
         {
@@ -32,17 +32,24 @@ void Mech::move(bool move_button[4], float stick_position[3], int16_t (&pwm)[4])
         {
             for (int i = 0; i < 4; i++)
             {
-                pwm[i] = wheel_max * stick_position[2] * is_control_change;
+                pwm[i] = wheel_max * -stick_position[2] * is_control_change / 2;
             }
         }
-        else
+        else if (fabs(stick_position[0] > 0.5) || fabs(stick_position[1]) > 0.5)
         {
             power = hypot(stick_position[0], stick_position[1]);
             angle = atan2(stick_position[1], -stick_position[0]);
             for (int i = 0; i < 4; i++)
             {
-                mecanum[i] = (sin((M_PI / 180 * (90 * i + 45)) + angle) * power * 4 );
+                mecanum[i] = (sin((M_PI / 180 * (90 * i + 45)) + angle) * power );
                 pwm[i] = wheel_max * mecanum[i] * is_control_change;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                pwm[i] = 0;
             }
         }
         break;
@@ -83,11 +90,11 @@ void Mech::yume_belt(bool belt_button[4], int16_t &pwm)
     }
 }
 
-void Mech::taityo_arm(bool arm_button[4], int16_t &pwm1, int16_t &pwm2)
+void Mech::taityo_arm(bool arm_button[2], int16_t &pwm1, int16_t &pwm2)
 {
-    pwm1 = taityo_single_arm_max * (arm_button[0] - arm_button[1]);
+    pwm1 = taityo_single_arm_max * (-arm_button[1] * 1.5) + always_taityo_single_arm;
 
-    pwm2 = taityo_double_arm_max * (arm_button[2] - arm_button[3]);
+    pwm2 = taityo_double_arm_max * (-arm_button[0] * 1.5) + always_taityo_double_arm;
 }
 
 void Mech::taityo_rack(bool rack_button[2], int16_t &pwm)

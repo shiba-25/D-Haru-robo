@@ -14,10 +14,10 @@ public:
     int16_t encoder[4] = {0};
     int16_t pwm[4] = {0};
     Mech(int change) : is_control_change(change) {}
-    void move(bool [6], float[4], int16_t (&)[4]);
+    void move(bool [6], float[4], int16_t (&)[4], int16_t[4]);
     void test(int16_t (&)[4]);
     void yume_belt(bool [4], int16_t &);
-    void taityo_arm(bool [4], int16_t &, int16_t &);
+    void taityo_arm(bool [2], int16_t &, int16_t &);
     void taityo_rack(bool[2], int16_t &);
     void nebaarukun(bool[2], int16_t &);
     void control_change(bool);
@@ -27,11 +27,13 @@ private:
     const int yume_belt_max = 7000;
     const int slow_yume_belt_max = 4000;
     const int taityo_single_arm_max = 3500;
-    const int taityo_double_arm_max = 5500;
-    const int taityo_triple_arm = 2000;
+    const int taityo_double_arm_max = 4500;
+    const int always_taityo_single_arm = 1800;
+    const int always_taityo_double_arm = 2000;
     const int taityo_rack_max = 18000;
-    const int nebaarukun_max = 10000;
-    const int wheel_motor[6][4] = {{-1, -1, 1, 1}, {1, 1, -1, -1}, {-1, 1, 1, -1}, {1, -1, -1, 1}, {1, 1, 1, 1}, {-1, -1, -1, -1}};
+    const int nebaarukun_max = 3000;
+    const int goal_role = 3000;
+    const int wheel_motor[4][4] = {{-1, -1, 1, 1}, {1, 1, -1, -1}, {-1, 1, 1, -1}, {1, -1, -1, 1}};
     float mecanum[4] = {0};
     float power = 0;
     float angle = 0;

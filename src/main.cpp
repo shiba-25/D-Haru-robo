@@ -25,6 +25,7 @@ CANMessage msg;
 Mech mech(1);
 FirstPenguin penguin(fp_id_1, plus_can, minus_can); // PA_3,PA_2,PA_10,PB_3
 FirstPenguin fp(fp_id_2, plus_can, minus_can);
+controller ctl;
 
 // struct PidGain
 // {
@@ -121,47 +122,46 @@ int main()
         // read_limit(is_limit);
         // fast_check = 0;
         // int a[6] = {1,0,0,0,0,0};
-        bool is_move[4] = {controller["u"],controller["d"],controller["r"],controller["l"]};
-        bool is_belt[4] = {controller["ci"],controller["cr"], controller["tri"], controller["sq"]};
-        bool is_arm[4] = {controller["L1"], controller["R1"], controller["L2"], controller["R2"]};
-        bool is_rack[2] = {controller["R3"], controller["L3"]};
-        bool is_nebaru[2] = {controller["SH"], controller["OP"]};
-        float stick_position[4] = {stick_value["lx"], stick_value["ly"], stick_value["rx"]};
-        // bool is_vgoal = controller["PS"];
-        mech.move(is_move, stick_position, penguin.pwm); //足回り
+        bool is_move[4] = {ctl.btton_value["u"],ctl.btton_value["d"],ctl.btton_value["r"],ctl.btton_value["l"]};
+        bool is_belt[4] = {ctl.btton_value["ci"],ctl.btton_value["cr"], ctl.btton_value["tri"], ctl.btton_value["sq"]};
+        bool is_arm[2] = {ctl.btton_value["L1"], ctl.btton_value["R1"]};
+        bool is_rack[2] = {ctl.btton_value["R2"], ctl.btton_value["L2"]};
+        bool is_nebaru[2] = {ctl.btton_value["SH"], ctl.btton_value["OP"]};
+        float stick_position[4] = {ctl.stick_value["ly"], ctl.stick_value["lx"], ctl.stick_value["rx"]};
+        mech.move(is_move, stick_position, penguin.pwm, encoder_value); //足回り
+        mech.nebaarukun(is_nebaru, fp.pwm[penguin_number]);
         mech.yume_belt(is_belt, pwm[0]);
         mech.taityo_arm(is_arm, pwm[1], pwm[2]);
         mech.taityo_rack(is_rack, pwm[3]);
-        mech.nebaarukun(is_nebaru, fp.pwm[penguin_number]);
+        // bool is_vgoal = controller["PS"];
         // mech.v_goal(is_vgoal);
         // for(int i = 0; i < 4; i++){
             // penguin.pwm[i] = -50;
             // }
-            // penguin.pwm[0] = 30;
             // fp.pwm[0] = 3
             if (hobo_ticker(dt, 0))
             {
+                // penguin.pwm[0] = 30;
                 // encoder_reset(encoder_value);
-            }
-            
-            if(button == 0)
-            {
-                NeoPixel = 1;
-                fast_check = 0;
-            }
-            else
-            {
-                NeoPixel = 0;
+                if(ctl.btton_value["PS"] == 1)
+                {
+                    NeoPixel = 1;
+                    fast_check = 0;
+                }
+                else
+                {
+                    NeoPixel = 0;
+                }
             }
             static int dbg_cnt = 0;
             if (++dbg_cnt % 50 == 0)
             {
                 // printf("pwm: %d", penguin.pwm[0]);
                 // printf("enc: %d, %d, %d, %d enc_init: %d, %d, %d, %d\n", encoder_value[0], encoder_value[1], encoder_value[2], encoder_value[3], encoder_initial[0], encoder_initial[1], encoder_initial[2], encoder_initial[3]);
-                printf("pwm: %d, %d, %d, %d\n", pwm[0], pwm[1], pwm[2], pwm[3]);
-            // printf("limit: %d\n", limit);
-            // printf("stick: %f, %f, %f", stick_value["lx"], stick_value["ly"], stick_value["rx"]);
-        }
+                // printf("pwm: %d, %d, %d, %d\n", penguin.pwm[0], pwm[1], pwm[2], pwm[3]);
+                // printf("limit: %d\n", limit);
+                // printf("stick: %f, %f, %f", stick_value["lx"], stick_value["ly"], stick_value["rx"]);
+            }
         // if(plus_can.read(msg); msg.id == 12){ //ID10のCANメッセージを抽出
         
         //     int16_t enc = msg.data[1] << 8 | msg.data[0]; //受け取った2byteのデータを結合
